@@ -15,9 +15,10 @@ function SignalingChannel(id){
         _sendMessage('init', id);
 
     }
-
+    //captured when user lost connection with signalingServer
     function _onClose(){
         console.error("connection closed");
+        _sendMessage('offline', id);
     }
 
     function _onError(err){
@@ -39,6 +40,9 @@ function SignalingChannel(id){
                 break;
             case "info":
                 self.onInit(objMessage.peers);
+                break;
+                case "offline":
+                self.onLeave();
                 break;
             default:
                 throw new Error("invalid message type");
@@ -89,6 +93,9 @@ function SignalingChannel(id){
     //default handler, should be overriden
     this.onInit = function(peers){
         console.log("messageHandler Get peers from Server");
+    };
+    this.onLeave = function(peers){
+        console.log("messageHandler peer leave");
     };
 }
 

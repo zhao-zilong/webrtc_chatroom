@@ -32,7 +32,9 @@ function initCaller(messageCallback) {
               }
             }, delay);
           })(peers[i]);
-              delay += 200;//must have a gap between two creation, otherwise, it will causet conflit when set Local description
+          //must have a gap between two creation, otherwise, it will cause conflit when set Local description
+          // raise STATE_INPROGRESS exception.
+          delay += 100;
           }
         }
         }
@@ -76,7 +78,6 @@ function initCaller(messageCallback) {
         });
 
 
-//        window.channel = _commChannel;
 
         _commChannel.onclose = function(evt) {
             console.log("dataChannel closed");
@@ -88,7 +89,10 @@ function initCaller(messageCallback) {
 
         _commChannel.onopen = function() {
             console.log("dataChannel opened", _commChannel);
-            _commChannel.send(localname+" is coming\n");
+            _commChannel.send(JSON.stringify({
+                type: 'arrive',
+                msg: localname+" is coming\n"
+            }));
         };
 
         _commChannel.onmessage = function(message) {
@@ -96,13 +100,14 @@ function initCaller(messageCallback) {
             if(Msg.type == "leave"){
               for (var i = 0; i < Channels.length; i++) {
                 if(Channels[i][0] == Msg.id){
+                   Channels[i][1].close();
                    Channels.splice(i,1);
                    messageCallback(Msg.msg);
                 }
               }
             }
-            else{
-              messageCallback(message.data);
+            if(Msg.type == "message" || Msg.type == "arrive"){
+              messageCallback(Msg.msg);
             }
         };
 
@@ -138,7 +143,19 @@ function initCaller(messageCallback) {
             console.log("channel received", receiveChannel);
             Channels[Channels.length] = [peerId, receiveChannel];
             receiveChannel.onmessage = function(event) {
-                messageCallback(event.data);
+              var Msg = JSON.parse(event.data);
+              if(Msg.type == "leave"){
+                for (var i = 0; i < Channels.length; i++) {
+                  if(Channels[i][0] == Msg.id){
+                     Channels[i][1].close();
+                     Channels.splice(i,1);
+                     messageCallback(Msg.msg);
+                  }
+                }
+              }
+              if(Msg.type == "message" || Msg.type == "arrive"){
+                messageCallback(Msg.msg);
+              }
             };
         };
 
@@ -167,13 +184,12 @@ function initCaller(messageCallback) {
     // and shut down the connection
     window.onunload = function(){
       for (var i = 0; i < Channels.length; i++) {
-        if(Channels[i][0] != localname){
           Channels[i][1].send(JSON.stringify({
               type: 'leave',
               id: localname,
               msg: localname+" is leaving\n",
           }));
-        }
+          Channels[i][1].close();
       }
 
     }

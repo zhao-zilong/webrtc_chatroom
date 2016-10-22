@@ -14,7 +14,8 @@ function onMessage(ws, message){
         case "init":
             onInit(ws, message.init);
             break;
-        case "":
+        case "offline":
+            onLeave(ws, message.init);
         default:
             throw new Error("invalid message type");
     }

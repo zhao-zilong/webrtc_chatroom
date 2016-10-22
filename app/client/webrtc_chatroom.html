@@ -7,7 +7,6 @@
     <script src="signalingChannelFactory.js"></script>
     <script src="webrtc_chatroom.js"></script>
     <script language="javascript" type="text/javascript">
-
         var login_flag = false;
         var localname;
         window.addEventListener("load", function() {
@@ -39,13 +38,24 @@
                 var user = document.getElementById("username").value;
                 for (var i = 0; i < Channels.length; i++) {
                     if (Channels[i][0] == user) {
-                        Channels[i][1].send(localname + ": " + document.getElementById("textTouser").value + "\n");
+                        Channels[i][1].send(JSON.stringify({
+                            type: 'message',
+                            msg: localname + ": " + document.getElementById("textTouser").value + "\n"
+                        }));
+                        received.appendChild(document.createTextNode(localname + ": " + document.getElementById("textTouser").value + "\n"));
                         document.getElementById("textTouser").value = "";
                         return;
                     }
                 }
             };
-
+            document.getElementById("getonlineuser").onclick = function() {
+                document.getElementById('userlist').innerHTML = "";
+                var userlist = document.getElementById("userlist");
+                userlist.appendChild(document.createTextNode("User Online:\n"));
+                for (var i = 0; i < Channels.length; i++) {
+                    userlist.appendChild(document.createTextNode(Channels[i][0]+"\n"));
+                }
+            };
         }, false);
     </script>
 </head>
@@ -55,14 +65,17 @@
     <input id="yourname" type="text" />
     <input id="connect" type="button" value="ConnectToRoom" /><br />
     <p id="welcome"></p><br />
-    <textarea id="messages" rows="5" cols="20"></textarea><br /> Message:
+    <textarea id="messages" rows="5" cols="20"></textarea><br />
+    Message:
     <input id="text" type="text" />
-    <input id="broadcast" type="button" value="broadcast" /><br /> To:
-    <input id="username" type="text" /> Message:
+    <input id="broadcast" type="button" value="broadcast" /><br />
+    To:
+    <input id="username" type="text" />
+    Message:
     <input id="textTouser" type="text" />
     <input id="send" type="button" value="send" /><br />
     <p id="userlist"></p><br />
-    <input id="get_online_user" type="button" value="GetOnLineList" /><br />
+    <input id="getonlineuser" type="button" value="GetOnLineList" /><br />
 </body>
 
 </html>
