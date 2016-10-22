@@ -177,7 +177,7 @@ function initCaller(messageCallback) {
 
 
 
-    //for invoking in html
+    //for quoting in html
     window.Channels = Channels;
 
     // when we close or refresh the tab, we notify everybody in the room that i am leaving.
@@ -191,6 +191,7 @@ function initCaller(messageCallback) {
           }));
           Channels[i][1].close();
       }
-
+      //disconnected to signalingServer
+      signalingChannel.closeConnection();
     }
 }

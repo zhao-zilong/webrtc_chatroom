@@ -1,6 +1,7 @@
 var  connectedPeers = {};
 function onMessage(ws, message){
     var type = message.type;
+    console.log(type);
     switch (type) {
         case "ICECandidate":
             onICECandidate(message.ICECandidate, message.destination, ws.id);
@@ -15,13 +16,22 @@ function onMessage(ws, message){
             onInit(ws, message.init);
             break;
         case "offline":
-            onLeave(ws, message.init);
+            onLeave(ws.id);
+            break;
         default:
             throw new Error("invalid message type");
     }
 }
 
 
+
+function onLeave(id){
+    console.log("messageHandler number of peers before delete:", getJsonObjLength(connectedPeers));
+    console.log("messageHandler delete peer:", id);
+    delete connectedPeers[id];
+    console.log("messageHandler number of peers after delete:", getJsonObjLength(connectedPeers));
+
+}
 
 function onInit(ws, id){
     console.log("messageHandler init from peer:", id);

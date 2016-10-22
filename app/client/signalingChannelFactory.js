@@ -94,9 +94,14 @@ function SignalingChannel(id){
     this.onInit = function(peers){
         console.log("messageHandler Get peers from Server");
     };
+    //default handler, should be overriden
     this.onLeave = function(peers){
-        console.log("messageHandler peer leave");
+        console.log("messageHandler peers leave");
     };
+
+    this.closeConnection = function(){
+        _sendMessage('offline', id);
+    }
 }
 
 window.createSignalingChannel = function(url, id){

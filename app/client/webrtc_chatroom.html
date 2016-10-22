@@ -22,13 +22,12 @@
                             var newText = document.createTextNode(message);
                             received.appendChild(newText);
                         });
-
+                        //giving a feedback to login
                         var welcome = document.getElementById("welcome");
                         var welcome_phrase = document.createTextNode("WELCOME: " + localname + '\n');
                         welcome.appendChild(welcome_phrase);
                         login_flag = true;
                     }
-                    //in case user relogin
                     else {
                         alert("You have already logged in");
                     }
@@ -48,18 +47,18 @@
                     }
                 }
             };
+
             document.getElementById("getonlineuser").onclick = function() {
                 document.getElementById('userlist').innerHTML = "";
                 var userlist = document.getElementById("userlist");
                 userlist.appendChild(document.createTextNode("User Online:\n"));
                 for (var i = 0; i < Channels.length; i++) {
-                    userlist.appendChild(document.createTextNode(Channels[i][0]+"\n"));
+                    userlist.appendChild(document.createTextNode(Channels[i][0] + "\n"));
                 }
             };
         }, false);
     </script>
 </head>
-
 <body>
     Write Your Name Here <br/>
     <input id="yourname" type="text" />
