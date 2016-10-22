@@ -33,19 +33,32 @@
                     }
                 }
             };
-            document.getElementById("send").onclick = function() {
+            document.getElementById("p2pmsg").onclick = function() {
                 var user = document.getElementById("username").value;
+                var message = document.getElementById("textTouser").value;
                 for (var i = 0; i < Channels.length; i++) {
                     if (Channels[i][0] == user) {
                         Channels[i][1].send(JSON.stringify({
                             type: 'message',
-                            msg: localname + ": " + document.getElementById("textTouser").value + "\n"
+                            msg: localname + ": " + message + "\n"
                         }));
-                        received.appendChild(document.createTextNode(localname + ": " + document.getElementById("textTouser").value + "\n"));
+                        received.appendChild(document.createTextNode(localname + ": " + message + "\n"));
                         document.getElementById("textTouser").value = "";
                         return;
                     }
                 }
+            };
+
+            document.getElementById("broadcast").onclick = function() {
+                var message = document.getElementById("textTobroadcast").value;
+                for (var i = 0; i < Channels.length; i++) {
+                        Channels[i][1].send(JSON.stringify({
+                            type: 'message',
+                            msg: localname + ": " + message + "\n"
+                        }));
+                }
+                received.appendChild(document.createTextNode(localname + ": " + message + "\n"));
+                document.getElementById("textTobroadcast").value = "";
             };
 
             document.getElementById("getonlineuser").onclick = function() {
@@ -66,13 +79,13 @@
     <p id="welcome"></p><br />
     <textarea id="messages" rows="5" cols="20"></textarea><br />
     Message:
-    <input id="text" type="text" />
+    <input id="textTobroadcast" type="text" />
     <input id="broadcast" type="button" value="broadcast" /><br />
     To:
     <input id="username" type="text" />
     Message:
     <input id="textTouser" type="text" />
-    <input id="send" type="button" value="send" /><br />
+    <input id="p2pmsg" type="button" value="send" /><br />
     <p id="userlist"></p><br />
     <input id="getonlineuser" type="button" value="GetOnLineList" /><br />
 </body>

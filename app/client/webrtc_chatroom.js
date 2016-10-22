@@ -87,14 +87,16 @@ function initCaller(messageCallback) {
             console.error("dataChannel error");
         };
 
+        //when a datachannel opened, user notify another end of channel
         _commChannel.onopen = function() {
             console.log("dataChannel opened", _commChannel);
             _commChannel.send(JSON.stringify({
-                type: 'arrive',
+                type: 'message',
                 msg: localname+" is coming\n"
             }));
         };
 
+        //
         _commChannel.onmessage = function(message) {
             var Msg = JSON.parse(message.data);
             if(Msg.type == "leave"){
@@ -106,7 +108,7 @@ function initCaller(messageCallback) {
                 }
               }
             }
-            if(Msg.type == "message" || Msg.type == "arrive"){
+            if(Msg.type == "message"){
               messageCallback(Msg.msg);
             }
         };
@@ -153,7 +155,7 @@ function initCaller(messageCallback) {
                   }
                 }
               }
-              if(Msg.type == "message" || Msg.type == "arrive"){
+              if(Msg.type == "message"){
                 messageCallback(Msg.msg);
               }
             };
