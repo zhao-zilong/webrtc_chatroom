@@ -57,10 +57,12 @@
             document.getElementById("broadcast").onclick = function() {
                 var message = document.getElementById("textTobroadcast").value;
                 for (var i = 0; i < Channels.length; i++) {
+                    if(Channels[i][1].readyState == "open"){
                         Channels[i][1].send(JSON.stringify({
                             type: 'message',
                             msg: localname + ": " + message + "\n"
                         }));
+                      }
                 }
                 received.appendChild(document.createTextNode(localname + ": " + message + "\n"));
                 document.getElementById("textTobroadcast").value = "";

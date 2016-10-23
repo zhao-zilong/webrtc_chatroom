@@ -29,8 +29,9 @@ function onMessage(ws, message) {
 //Attention: There is the chance(very rare) that Chrome doesn't work correctly in callback
 //onunload(), then we will keep a broken websocket in connectedPeers. Solved in onInit().
 function onLeave(id) {
-  console.log("messageHandler peer " + id + "is leaving");
+  console.log("messageHandler peer " + id + " is leaving");
   delete connectedPeers[id];
+  console.log("messageHandler number of peers now: "+getJsonObjLength(connectedPeers));
 
 
 }

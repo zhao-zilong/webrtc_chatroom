@@ -1,3 +1,7 @@
+//callee identity:
+//Be called when there are new comers
+
+
 function initialCallee(signalingChannel, servers, RTCSessionDescription, RTCPeerConnection, RTCIceCandidate, messageCallback) {
     //respond to createOffer() from caller
     signalingChannel.onOffer = function(offer, source) {

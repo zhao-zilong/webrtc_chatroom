@@ -1,3 +1,8 @@
+//caller identity:
+//Be called when there are new comers
+
+
+
 function initialCaller(signalingChannel, servers, RTCSessionDescription, RTCPeerConnection, RTCIceCandidate, messageCallback) {
     //onInit: callback when connected to signalingServer, Get online user list
     //from signalingServer, initialize local channels with online users.
