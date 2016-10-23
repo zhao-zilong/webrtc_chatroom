@@ -18,7 +18,7 @@
                     alert("NAME CAN'T BE NULL!");
                 } else {
                     if (login_flag == false) {
-                        initCaller(function(message) {
+                        initial(function(message) {
                             var newText = document.createTextNode(message);
                             received.appendChild(newText);
                         });
@@ -33,6 +33,7 @@
                     }
                 }
             };
+
             document.getElementById("p2pmsg").onclick = function() {
                 var user = document.getElementById("username").value;
                 var message = document.getElementById("textTouser").value;
@@ -62,6 +63,7 @@
             };
 
             document.getElementById("getonlineuser").onclick = function() {
+                updateChannel();
                 document.getElementById('userlist').innerHTML = "";
                 var userlist = document.getElementById("userlist");
                 userlist.appendChild(document.createTextNode("User Online:\n"));

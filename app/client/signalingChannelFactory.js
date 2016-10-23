@@ -70,7 +70,7 @@ function SignalingChannel(id){
     this.sendOffer = sendOffer;
     this.sendAnswer = sendAnswer;
 
-
+    //Called when a tab is closed or refreshed
     this.closeConnection = function(){
         _sendMessage('offline', id);
     }

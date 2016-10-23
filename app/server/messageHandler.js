@@ -1,5 +1,6 @@
-var  connectedPeers = {};
-function onMessage(ws, message){
+var connectedPeers = {};
+
+function onMessage(ws, message) {
     var type = message.type;
     console.log(type);
     switch (type) {
@@ -25,45 +26,52 @@ function onMessage(ws, message){
 
 
 //Delete the leaving connection in the server.
-//Attention: when we quickly close several tabs, there is the chance that Chrome doesn't work correctly in callback onunload(),
-//           then we can got a broken websocket in connectedPeers.
-function onLeave(id){
+//Attention: There is the chance(for example when we quickly close several tabs) that Chrome doesn't work correctly in callback onunload(),
+//           then we will keep a broken websocket in connectedPeers. Solved in onInit().
+function onLeave(id) {
+  console.log("messageHandler peer " + id + "is leaving");
+  console.log("messageHandler number of peers before:", getJsonObjLength(connectedPeers));
     delete connectedPeers[id];
+  console.log("messageHandler number of peers after:", getJsonObjLength(connectedPeers));
 
 }
 
-function onInit(ws, id){
+function onInit(ws, id) {
     console.log("messageHandler init from peer:", id);
 
-    //During the tests, there is the problem that some of the websocket have not been deleted neatly
-    //So before connecting with others, test if the websocket is usable
+    //To solve the problems of the broken websocket:
+    //Before connecting with others, test if the websocket is usable
+    //readyState: 0 for Connectiong, 1 for Open, 2 for Closing, 3 for closed
     for (var item in connectedPeers) {
         if (!connectedPeers.hasOwnProperty(item)) continue;
-        console.log("messageHandler id  and state", item+" "+connectedPeers[item].readyState);
-        if(connectedPeers[item].readyState == 2 || connectedPeers[item].readyState == 3){
-          delete connectedPeers[item];
+        console.log("messageHandler id  and state", item + " " + connectedPeers[item].readyState);
+
+        if (connectedPeers[item].readyState == 2 ||
+            connectedPeers[item].readyState == 3 ||
+            typeof (connectedPeers[item].readyState)=== 'undefined') {
+            delete connectedPeers[item];
         }
     }
     ws.id = id;
     connectedPeers[id] = ws;
     console.log("messageHandler number of peers:", getJsonObjLength(connectedPeers));
     connectedPeers[id].send(JSON.stringify({
-        type:'info',
+        type: 'info',
         peers: Object.keys(connectedPeers),
     }));
 
 }
 
-function onOffer(offer, destination, source){
+function onOffer(offer, destination, source) {
     console.log("messageHandler offer from peer:", source, "to peer", destination);
     connectedPeers[destination].send(JSON.stringify({
-        type:'offer',
-        offer:offer,
-        source:source,
+        type: 'offer',
+        offer: offer,
+        source: source,
     }));
 }
 
-function onAnswer(answer, destination, source){
+function onAnswer(answer, destination, source) {
     console.log("messageHandler answer from peer:", source, "to peer", destination);
     connectedPeers[destination].send(JSON.stringify({
         type: 'answer',
@@ -72,7 +80,7 @@ function onAnswer(answer, destination, source){
     }));
 }
 
-function onICECandidate(ICECandidate, destination, source){
+function onICECandidate(ICECandidate, destination, source) {
     console.log("messageHandler ICECandidate from peer:", source, "to peer", destination);
     connectedPeers[destination].send(JSON.stringify({
         type: 'ICECandidate',
@@ -82,14 +90,13 @@ function onICECandidate(ICECandidate, destination, source){
 }
 
 
-// calculate the length of a json object
-// here use to calulate the length of connectedPeers
+// Calculate the length of a json object
 function getJsonObjLength(jsonObj) {
-  var Length = 0;
-  for (var item in jsonObj) {
-    Length++;
-  }
-  return Length;
+    var Length = 0;
+    for (var item in jsonObj) {
+        Length++;
+    }
+    return Length;
 }
 
 module.exports = onMessage;
