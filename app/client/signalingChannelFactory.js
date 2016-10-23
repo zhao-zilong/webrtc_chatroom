@@ -1,9 +1,9 @@
-function SignalingChannel(id){
+function SignalingChannel(id) {
 
     var _ws;
     var self = this;
 
-    function connectToTracker(url){
+    function connectToTracker(url) {
         _ws = new WebSocket(url);
         _ws.onopen = _onConnectionEstablished;
         _ws.onclose = _onClose;
@@ -11,20 +11,21 @@ function SignalingChannel(id){
         _ws.onerror = _onError;
     }
 
-    function _onConnectionEstablished(){
+    function _onConnectionEstablished() {
         _sendMessage('init', id);
 
     }
-    function _onClose(){
+
+    function _onClose() {
         console.error("connection closed");
     }
 
-    function _onError(err){
+    function _onError(err) {
         console.error("error:", err);
     }
 
 
-    function _onMessage(evt){
+    function _onMessage(evt) {
         var objMessage = JSON.parse(evt.data);
         switch (objMessage.type) {
             case "ICECandidate":
@@ -44,7 +45,7 @@ function SignalingChannel(id){
         }
     }
 
-    function _sendMessage(type, data, destination){
+    function _sendMessage(type, data, destination) {
         var message = {};
         message.type = type;
         message[type] = data;
@@ -52,15 +53,15 @@ function SignalingChannel(id){
         _ws.send(JSON.stringify(message));
     }
 
-    function sendICECandidate(ICECandidate, destination){
+    function sendICECandidate(ICECandidate, destination) {
         _sendMessage("ICECandidate", ICECandidate, destination);
     }
 
-    function sendOffer(offer, destination){
+    function sendOffer(offer, destination) {
         _sendMessage("offer", offer, destination);
     }
 
-    function sendAnswer(answer, destination){
+    function sendAnswer(answer, destination) {
         _sendMessage("answer", answer, destination);
 
     }
@@ -70,13 +71,36 @@ function SignalingChannel(id){
     this.sendOffer = sendOffer;
     this.sendAnswer = sendAnswer;
 
+    //Can not delete folloing default handler, they provided the entrances to our overrided function
+    //otherwise, the code can't be loaded
+
+    //default handler, should be overriden
+    this.onOffer = function(offer, source){
+        console.log("offer from peer:", source, ':', offer);
+    };
+
+    //default handler, should be overriden
+    this.onAnswer = function(answer, source){
+        console.log("answer from peer:", source, ':', answer);
+    };
+
+    //default handler, should be overriden
+    this.onICECandidate = function(ICECandidate, source){
+        console.log("ICECandidate from peer:", source, ':', ICECandidate);
+    };
+
+    //default handler, should be overriden
+    this.onInit = function(peers) {
+        console.log("onInit");
+    };
+
     //Called when a tab is closed or refreshed
-    this.closeConnection = function(){
+    this.closeConnection = function() {
         _sendMessage('offline', id);
     }
 }
 
-window.createSignalingChannel = function(url, id){
+window.createSignalingChannel = function(url, id) {
     var signalingChannel = new SignalingChannel(id);
     signalingChannel.connectToTracker(url);
     return signalingChannel;

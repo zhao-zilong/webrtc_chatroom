@@ -5,7 +5,11 @@
     <meta charset="utf-8" />
     <title>chat page</title>
     <script src="signalingChannelFactory.js"></script>
-    <script src="webrtc_chatroom.js"></script>
+    <!-- <script src="webrtc_chatroom.js"></script> -->
+    <script src="initialisation.js"></script>
+    <script src="caller.js"></script>
+    <script src="callee.js"></script>
+    <script src="channelControl.js"></script>
     <script language="javascript" type="text/javascript">
         var login_flag = false;
         var localname;
@@ -68,7 +72,9 @@
                 var userlist = document.getElementById("userlist");
                 userlist.appendChild(document.createTextNode("User Online:\n"));
                 for (var i = 0; i < Channels.length; i++) {
-                    userlist.appendChild(document.createTextNode(Channels[i][0] + "\n"));
+                    if(Channels[i][1].readyState == "open"){
+                      userlist.appendChild(document.createTextNode(Channels[i][0] + "\n"));
+                    }
                 }
             };
         }, false);

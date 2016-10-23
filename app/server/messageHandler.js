@@ -26,13 +26,12 @@ function onMessage(ws, message) {
 
 
 //Delete the leaving connection in the server.
-//Attention: There is the chance(for example when we quickly close several tabs) that Chrome doesn't work correctly in callback onunload(),
-//           then we will keep a broken websocket in connectedPeers. Solved in onInit().
+//Attention: There is the chance(very rare) that Chrome doesn't work correctly in callback
+//onunload(), then we will keep a broken websocket in connectedPeers. Solved in onInit().
 function onLeave(id) {
   console.log("messageHandler peer " + id + "is leaving");
-  console.log("messageHandler number of peers before:", getJsonObjLength(connectedPeers));
-    delete connectedPeers[id];
-  console.log("messageHandler number of peers after:", getJsonObjLength(connectedPeers));
+  delete connectedPeers[id];
+
 
 }
 
