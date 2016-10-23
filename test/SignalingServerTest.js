@@ -23,7 +23,7 @@ describe('signalingServer', function() {
             messageHandler(ws2, message2);
             ws1.id.should.be.equal(1);
             //Because when ws2 joined, readyState for ws1 is undefined,
-            //server will treat it like a broken websocket.
+            //server will treat ws1 like a broken websocket.
             should.not.exist(messageHandler._connectedPeers[1]);
             ws2.id.should.be.equal(2);
             messageHandler._connectedPeers[2].should.be.equal(ws2);
