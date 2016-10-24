@@ -71,7 +71,7 @@ function SignalingChannel(id) {
     this.sendOffer = sendOffer;
     this.sendAnswer = sendAnswer;
 
-    //Can not delete folloing default handler, they provided the entrances to our overrided function
+    //Can not delete following default handler, they provided the entrances to our overrided functions
     //otherwise, the code can't be loaded
 
     //default handler, should be overriden

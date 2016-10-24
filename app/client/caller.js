@@ -1,5 +1,5 @@
 //caller identity:
-//Be called when there are new comers
+//call all online users when login
 
 
 

@@ -40,6 +40,8 @@ function initialCallee(signalingChannel, servers, RTCSessionDescription, RTCPeer
             var receiveChannel = event.channel;
             console.log("channel received", receiveChannel);
             Channels[Channels.length] = [peerId, receiveChannel];
+
+            //callback when datachannel received message
             receiveChannel.onmessage = function(event) {
                 var Msg = JSON.parse(event.data);
                 if (Msg.type == "leave") {
