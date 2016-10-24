@@ -10,23 +10,36 @@ describe('signalingServer', function() {
     describe('Initialization', function() {
         it('onInit', function() {
             var ws1 = new WsMock();
+            ws1.readyState = 1;
             var message1 = {
                 type:"init",
-                init:1
+                init:'alice'
             };
             var ws2 = new WsMock();
+            ws2.readyState = 2;
             var message2 = {
                 type:"init",
-                init:2
+                init:'bob'
+            };
+            var ws3 = new WsMock();
+            ws3.readyState = undefined;
+            var message3 = {
+                type:"init",
+                init:'cloud'
             };
             messageHandler(ws1, message1);
             messageHandler(ws2, message2);
-            ws1.id.should.be.equal(1);
+            messageHandler(ws3, message3);
+            ws1.id.should.be.equal('alice');
+            ws2.id.should.be.equal('bob');
+            ws3.id.should.be.equal('cloud');
             //Because when ws2 joined, readyState for ws1 is undefined,
             //server will treat ws1 like a broken websocket.
-            should.not.exist(messageHandler._connectedPeers[1]);
-            ws2.id.should.be.equal(2);
-            messageHandler._connectedPeers[2].should.be.equal(ws2);
+            should.not.exist(messageHandler._connectedPeers['bob']);
+            messageHandler._connectedPeers['alice'].should.be.equal(ws1);
+            //because ws3 is the last joined peer, even the readyState is undefined
+            //it has to wait until next user login in, then delete it
+            messageHandler._connectedPeers['cloud'].should.be.equal(ws3);
         });
     });
     describe('Messages', function() {

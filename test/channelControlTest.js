@@ -1,5 +1,4 @@
 var should = require('should')
-var sinon = require('sinon');
 var channelControl = require('../test/channelControl');
 
 var datachannel = function(name) {
