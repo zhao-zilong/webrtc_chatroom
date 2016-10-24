@@ -1,6 +1,6 @@
 var should = require('should')
 var sinon = require('sinon');
-var channelControl = require('../test/channelControl');
+var channelControl = require('./channelControl');
 
 var datachannel = function(name) {
     this.readyState = name;
