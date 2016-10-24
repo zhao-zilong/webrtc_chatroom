@@ -1,4 +1,5 @@
 //updateChannel: recover 'connecting' state connections, cleanup useless connections
+//called every time we click GetOnLineList
 
 //Even we set timeout in Oninit(), there is always the chance(very rare) that
 //some connections fail in STATE_INPROGRESS or STATE_INIT exception
