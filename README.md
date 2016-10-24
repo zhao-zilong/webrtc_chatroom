@@ -32,3 +32,6 @@ The unit tests can be found in the `test/` directory.
 #### run tests
 
     npm test
+
+## Question 2
+- link to the answer of [question2](Q2.md)
