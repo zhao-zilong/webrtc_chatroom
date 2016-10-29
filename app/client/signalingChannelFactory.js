@@ -40,6 +40,9 @@ function SignalingChannel(id) {
             case "info":
                 self.onInit(objMessage.peers);
                 break;
+            case "onlinelist":
+                self.onAnserOnlineList(objMessage.peers);
+                break;
             default:
                 throw new Error("invalid message type");
         }
@@ -94,9 +97,18 @@ function SignalingChannel(id) {
         console.log("onInit");
     };
 
+    this.onAnserOnlineList = function(peers){
+        console.log("onlinelist");
+    }
+
     //Called when a tab is closed or refreshed
     this.closeConnection = function() {
-        _sendMessage('offline', id);
+        _sendMessage('offline');
+    }
+
+    //send a request to update online list
+    this.requestOnlineList = function(){
+        _sendMessage('onlinelist');
     }
 }
 

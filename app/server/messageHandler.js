@@ -19,10 +19,16 @@ function onMessage(ws, message) {
         case "offline":
             onLeave(ws.id);
             break;
+        case "onlinelist":
+            onAnswerRequest(ws.id);
+            break;
         default:
             throw new Error("invalid message type");
     }
 }
+
+
+
 
 
 //Delete the leaving connection in the server.
@@ -59,6 +65,24 @@ function onInit(ws, id) {
         type: 'info',
         peers: Object.keys(connectedPeers),
     }));
+
+}
+
+
+function onAnswerRequest(id) {
+  console.log("messageHandler peer " + id + " is requesting online list");
+  for (var item in connectedPeers) {
+      if (!connectedPeers.hasOwnProperty(item)) continue;
+      if (connectedPeers[item].readyState == 2 ||
+          connectedPeers[item].readyState == 3 ||
+          typeof (connectedPeers[item].readyState)=== 'undefined') {
+          delete connectedPeers[item];
+      }
+  }
+  connectedPeers[id].send(JSON.stringify({
+      type: 'onlinelist',
+      peers: Object.keys(connectedPeers),
+  }));
 
 }
 

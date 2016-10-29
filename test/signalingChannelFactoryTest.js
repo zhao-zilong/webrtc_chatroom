@@ -1,6 +1,6 @@
 var should = require('should')
 var sinon = require('sinon');
-var signalingChannel = require('./signalFactory');
+var signalingChannel = require('./signalingChannelFactory');
 
 var WsMock = function(){
     this.send = function(){};

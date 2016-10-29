@@ -35,6 +35,7 @@ function initial(messageCallback) {
         signalingChannel.closeConnection();
     }
 
-
+    
+    heartBeatCheck(signalingChannel);
 
 }

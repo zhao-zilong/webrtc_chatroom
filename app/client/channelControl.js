@@ -29,3 +29,33 @@ function updateChannel() {
         }
     }
 }
+
+
+
+//heartBeatCheck: implement a heart beat check, to synchronize online connection
+//information from server to local.
+
+
+//we can't avoid a problem that when we create the connection, maybe there is the
+//lost of package, when the number of users grow fast, we can miss some online
+//users locally, so we update online list from server every 20s.
+function  heartBeatCheck(signalingChannel){
+
+  setInterval(function(){
+    signalingChannel.requestOnlineList();
+  }, 20000);
+
+  signalingChannel.onAnserOnlineList = function(peers){
+        var localonlinelist = [];
+        for (var i = 0; i < Channels.length; i++) {
+            localonlinelist[i] = Channels[i][0];
+        }
+        for (var i = 1; i < peers.length; i++) {
+            if(localonlinelist.indexOf(peers[i]) == -1
+            &&peers[i]!=localname){
+              Channels[Channels.length] = [peers[i], startCommunication(peers[i])];
+            }
+        }
+    };
+
+}
